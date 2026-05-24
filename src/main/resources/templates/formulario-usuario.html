@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usuario - Sistema ERP</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: #0d1117; min-height: 100vh; font-family: 'Segoe UI', system-ui, sans-serif; color: #c9d1d9; display: flex; align-items: flex-start; justify-content: center; padding: 2rem 1rem; }
+        .card { background: #161b22; border: 1px solid #21262d; border-radius: 12px; width: 100%; max-width: 520px; overflow: hidden; }
+        .card-header { padding: 1.5rem 1.75rem 1.25rem; border-bottom: 1px solid #21262d; }
+        .card-header-top { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.25rem; }
+        .header-icon { width: 38px; height: 38px; background: rgba(56,139,253,0.12); border: 1px solid rgba(56,139,253,0.2); border-radius: 9px; display: flex; align-items: center; justify-content: center; color: #58a6ff; font-size: 1rem; flex-shrink: 0; }
+        .card-title { font-size: 1rem; font-weight: 700; color: #f0f6fc; }
+        .card-subtitle { font-size: 0.8rem; color: #6e7681; margin-left: calc(38px + 0.75rem); }
+        .card-body { padding: 1.5rem 1.75rem; }
+        .alert-err { background: rgba(248,81,73,0.1); border: 1px solid rgba(248,81,73,0.2); color: #f85149; border-radius: 8px; padding: 0.65rem 1rem; font-size: 0.84rem; margin-bottom: 1.25rem; }
+        .section-title { font-size: 0.67rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: #484f58; margin-bottom: 0.85rem; margin-top: 1.25rem; padding-bottom: 0.5rem; border-bottom: 1px solid #21262d; display: flex; align-items: center; gap: 0.4rem; }
+        .section-title:first-child { margin-top: 0; }
+        label { display: block; font-size: 0.78rem; font-weight: 600; color: #8b949e; margin-bottom: 0.35rem; }
+        .input-wrap { position: relative; margin-bottom: 1rem; }
+        .input-wrap i.icon { position: absolute; left: 0.8rem; top: 50%; transform: translateY(-50%); color: #484f58; font-size: 0.85rem; pointer-events: none; }
+        input[type=text], input[type=email], input[type=password], input[type=hidden] { width: 100%; background: #0d1117; border: 1px solid #30363d; border-radius: 8px; color: #f0f6fc; font-size: 0.875rem; padding: 0.62rem 0.85rem 0.62rem 2.2rem; outline: none; transition: border-color 0.2s; font-family: inherit; }
+        input[type=text]:focus, input[type=email]:focus, input[type=password]:focus { border-color: #388bfd; box-shadow: 0 0 0 3px rgba(56,139,253,0.1); }
+        input::placeholder { color: #484f58; }
+        .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; margin-bottom: 1rem; }
+        .row2 .input-wrap { margin-bottom: 0; }
+        .pass-wrap { position: relative; margin-bottom: 1rem; }
+        .pass-wrap input { padding-right: 2.8rem; }
+        .pass-toggle { position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); background: none; border: none; color: #484f58; cursor: pointer; font-size: 0.9rem; padding: 0; transition: color 0.15s; }
+        .pass-toggle:hover { color: #8b949e; }
+        .pass-note { font-size: 0.75rem; color: #6e7681; margin-top: 0.25rem; margin-bottom: 1rem; }
+        .rol-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1.25rem; }
+        .rol-option { position: relative; }
+        .rol-option input[type=radio] { position: absolute; opacity: 0; width: 0; height: 0; }
+        .rol-label { display: block; border: 1px solid #30363d; border-radius: 9px; padding: 0.85rem; cursor: pointer; transition: all 0.15s; text-align: center; }
+        .rol-label:hover { border-color: #388bfd; background: rgba(56,139,253,0.04); }
+        .rol-option input[type=radio]:checked + .rol-label { border-color: #388bfd; background: rgba(56,139,253,0.08); }
+        .rol-icon { font-size: 1.3rem; display: block; margin-bottom: 0.3rem; }
+        .rol-name { font-size: 0.82rem; font-weight: 700; color: #f0f6fc; display: block; }
+        .rol-desc { font-size: 0.72rem; color: #6e7681; display: block; margin-top: 0.1rem; }
+        .card-footer { padding: 1.1rem 1.75rem; border-top: 1px solid #21262d; display: flex; flex-direction: column; gap: 0.5rem; }
+        .btn-submit { background: #1d4ed8; color: #fff; border: none; border-radius: 8px; padding: 0.65rem; font-size: 0.875rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.45rem; transition: background 0.15s; font-family: inherit; }
+        .btn-submit:hover { background: #2563eb; }
+        .btn-cancel { background: none; color: #8b949e; border: 1px solid #30363d; border-radius: 8px; padding: 0.62rem; font-size: 0.875rem; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 0.45rem; transition: all 0.15s; }
+        .btn-cancel:hover { border-color: #58a6ff; color: #58a6ff; }
+    </style>
+</head>
+<body>
+<div class="card">
+    <div class="card-header">
+        <div class="card-header-top">
+            <div class="header-icon"><i class="bi bi-person-gear"></i></div>
+            <span class="card-title" th:text="${esNuevo} ? 'Registrar Usuario' : 'Editar Usuario'">Usuario</span>
+        </div>
+        <div class="card-subtitle" th:text="${esNuevo} ? 'Completa los datos para dar acceso al ERP' : 'Modifica los datos del usuario'"></div>
+    </div>
+    <div class="card-body">
+        <div th:if="${errorMsg}" class="alert-err"><i class="bi bi-x-circle-fill me-2"></i><span th:text="${errorMsg}"></span></div>
+
+        <form th:action="@{/usuarios/guardar}" th:object="${usuario}" method="POST" id="form">
+            <input type="hidden" th:field="*{id}">
+
+            <div class="section-title"><i class="bi bi-shield-lock"></i> Acceso al Sistema</div>
+
+            <label>Nombre de Usuario *</label>
+            <div class="input-wrap">
+                <i class="icon bi bi-at"></i>
+                <input type="text" th:field="*{username}" placeholder="Ej: juan.garcia" required>
+            </div>
+
+            <label>Contraseña <span th:if="${!esNuevo}" style="color:#6e7681;font-weight:400;">(dejar vacío para no cambiar)</span><span th:if="${esNuevo}"> *</span></label>
+            <div class="pass-wrap input-wrap">
+                <i class="icon bi bi-lock"></i>
+                <input type="password" id="pwd" name="passwordNuevo" placeholder="••••••••" th:required="${esNuevo}">
+                <button type="button" class="pass-toggle" onclick="togglePwd()"><i class="bi bi-eye" id="eyeIcon"></i></button>
+            </div>
+
+            <div class="section-title"><i class="bi bi-person"></i> Información Personal</div>
+
+            <label>Nombre Completo</label>
+            <div class="input-wrap">
+                <i class="icon bi bi-person"></i>
+                <input type="text" th:field="*{nombreCompleto}" placeholder="Ej: Juan García López">
+            </div>
+
+            <div class="row2">
+                <div>
+                    <label>Correo Electrónico</label>
+                    <div class="input-wrap">
+                        <i class="icon bi bi-envelope"></i>
+                        <input type="email" th:field="*{email}" placeholder="correo@empresa.com">
+                    </div>
+                </div>
+                <div>
+                    <label>Teléfono</label>
+                    <div class="input-wrap">
+                        <i class="icon bi bi-telephone"></i>
+                        <input type="text" th:field="*{telefono}" placeholder="3001234567">
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-title"><i class="bi bi-shield-check"></i> Nivel de Acceso</div>
+            <div class="rol-grid">
+                <div class="rol-option">
+                    <input type="radio" th:field="*{rol}" value="ROLE_ADMIN" id="rAdmin">
+                    <label class="rol-label" for="rAdmin">
+                        <i class="bi bi-shield-fill-check rol-icon" style="color:#58a6ff;"></i>
+                        <span class="rol-name">Administrador</span>
+                        <span class="rol-desc">Acceso total al ERP</span>
+                    </label>
+                </div>
+                <div class="rol-option">
+                    <input type="radio" th:field="*{rol}" value="ROLE_USER" id="rUser">
+                    <label class="rol-label" for="rUser">
+                        <i class="bi bi-person-fill rol-icon" style="color:#6e7681;"></i>
+                        <span class="rol-name">Usuario</span>
+                        <span class="rol-desc">Acceso limitado</span>
+                    </label>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="card-footer">
+        <button type="submit" form="form" class="btn-submit">
+            <i class="bi bi-check2-circle"></i>
+            <span th:text="${esNuevo} ? 'Registrar Usuario' : 'Guardar Cambios'">Guardar</span>
+        </button>
+        <a th:href="@{/usuarios/listar}" class="btn-cancel"><i class="bi bi-arrow-left"></i> Cancelar</a>
+    </div>
+</div>
+<script>
+function togglePwd() {
+    const i = document.getElementById('pwd');
+    const e = document.getElementById('eyeIcon');
+    if(i.type==='password'){i.type='text';e.className='bi bi-eye-slash';}
+    else{i.type='password';e.className='bi bi-eye';}
+}
+</script>
+</body>
+</html>

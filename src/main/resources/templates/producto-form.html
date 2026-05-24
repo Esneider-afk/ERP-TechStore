@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Producto - Sistema ERP</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: #0d1117; min-height: 100vh; font-family: 'Segoe UI', system-ui, sans-serif; color: #c9d1d9; display: flex; align-items: flex-start; justify-content: center; padding: 2rem 1rem; }
+        .card { background: #161b22; border: 1px solid #21262d; border-radius: 12px; width: 100%; max-width: 440px; overflow: hidden; }
+        .card-header { padding: 1.5rem 1.75rem 1.25rem; border-bottom: 1px solid #21262d; display: flex; align-items: center; gap: 0.75rem; }
+        .header-icon { width: 38px; height: 38px; background: rgba(210,153,34,0.12); border: 1px solid rgba(210,153,34,0.2); border-radius: 9px; display: flex; align-items: center; justify-content: center; color: #d29922; font-size: 1rem; flex-shrink: 0; }
+        .header-text .title { font-size: 1rem; font-weight: 700; color: #f0f6fc; }
+        .header-text .sub { font-size: 0.78rem; color: #6e7681; margin-top: 0.1rem; }
+        .card-body { padding: 1.5rem 1.75rem; }
+        label { display: block; font-size: 0.78rem; font-weight: 600; color: #8b949e; margin-bottom: 0.35rem; }
+        .input-wrap { position: relative; margin-bottom: 1rem; }
+        .input-wrap i { position: absolute; left: 0.8rem; top: 50%; transform: translateY(-50%); color: #484f58; font-size: 0.85rem; pointer-events: none; }
+        .prefix { position: absolute; left: 0.85rem; top: 50%; transform: translateY(-50%); color: #6e7681; font-size: 0.85rem; font-weight: 600; pointer-events: none; }
+        input[type=text], input[type=number] { width: 100%; background: #0d1117; border: 1px solid #30363d; border-radius: 8px; color: #f0f6fc; font-size: 0.875rem; padding: 0.62rem 0.85rem 0.62rem 2.2rem; outline: none; transition: border-color 0.2s; font-family: inherit; }
+        .input-prefix input { padding-left: 1.8rem; }
+        input:focus { border-color: #388bfd; box-shadow: 0 0 0 3px rgba(56,139,253,0.1); }
+        input::placeholder { color: #484f58; }
+        .card-footer { padding: 1.1rem 1.75rem; border-top: 1px solid #21262d; display: flex; flex-direction: column; gap: 0.5rem; }
+        .btn-submit { background: #1d4ed8; color: #fff; border: none; border-radius: 8px; padding: 0.65rem; font-size: 0.875rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.45rem; transition: background 0.15s; font-family: inherit; }
+        .btn-submit:hover { background: #2563eb; }
+        .btn-cancel { background: none; color: #8b949e; border: 1px solid #30363d; border-radius: 8px; padding: 0.62rem; font-size: 0.875rem; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 0.45rem; transition: all 0.15s; }
+        .btn-cancel:hover { border-color: #58a6ff; color: #58a6ff; }
+    </style>
+</head>
+<body>
+<div class="card">
+    <div class="card-header">
+        <div class="header-icon"><i class="bi bi-box-seam"></i></div>
+        <div class="header-text">
+            <div class="title" th:text="${esNuevo} ? 'Nuevo Producto' : 'Editar Producto'">Producto</div>
+            <div class="sub" th:text="${esNuevo} ? 'Agregar al inventario' : 'Modificar datos del producto'"></div>
+        </div>
+    </div>
+    <div class="card-body">
+        <form th:action="@{/productos/guardar}" th:object="${producto}" method="POST" id="form">
+            <input type="hidden" th:field="*{id}">
+
+            <label>Nombre del Producto *</label>
+            <div class="input-wrap">
+                <i class="bi bi-tag"></i>
+                <input type="text" th:field="*{nombre}" placeholder="Ej: Laptop Dell XPS" required>
+            </div>
+
+            <label>Precio de Venta *</label>
+            <div class="input-wrap input-prefix">
+                <span class="prefix">$</span>
+                <input type="number" step="0.01" th:field="*{precio}" placeholder="0.00" required style="padding-left:1.6rem;">
+            </div>
+
+            <label>Stock Disponible *</label>
+            <div class="input-wrap">
+                <i class="bi bi-layers"></i>
+                <input type="number" th:field="*{stock}" placeholder="Cantidad en bodega" required min="0">
+            </div>
+        </form>
+    </div>
+    <div class="card-footer">
+        <button type="submit" form="form" class="btn-submit">
+            <i class="bi bi-check2-circle"></i>
+            <span th:text="${esNuevo} ? 'Guardar Producto' : 'Actualizar Producto'">Guardar</span>
+        </button>
+        <a th:href="@{/inventario}" class="btn-cancel"><i class="bi bi-arrow-left"></i> Cancelar</a>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <div class="card p-4 col-md-6 mx-auto">
+            <h3>Nueva Venta</h3>
+            <form th:action="@{/ventas/guardar}" method="POST">
+                <div class="mb-3">
+                    <label>Cliente</label>
+                    <input type="text" name="cliente" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label>Producto</label>
+                    <select name="productoId" class="form-select" required>
+                        <option th:each="p : ${listaProductos}" 
+                                th:value="${p.id}" 
+                                th:text="${p.nombre + ' (Stock: ' + p.stock + ')'}"></option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label>Cantidad</label>
+                    <input type="number" name="cantidad" class="form-control" min="1" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Registrar Venta</button>
+                <a th:href="@{/ventas/listar}" class="btn btn-secondary">Cancelar</a>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
