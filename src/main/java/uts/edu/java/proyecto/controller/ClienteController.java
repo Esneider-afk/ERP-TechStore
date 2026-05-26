@@ -6,23 +6,19 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import uts.edu.java.proyecto.model.Cliente;
-import uts.edu.java.proyecto.model.Venta;
 import uts.edu.java.proyecto.repository.ClienteRepository;
-import uts.edu.java.proyecto.repository.VentaRepository;
-
-import java.util.List;
 
 @Controller
 @RequestMapping("/clientes")
 public class ClienteController {
 
-    @Autowired private ClienteRepository clienteRepository;
-    @Autowired private VentaRepository ventaRepository;
+    @Autowired
+    private ClienteRepository clienteRepository;
 
     @GetMapping("/listar")
     public String listar(Model model) {
-        model.addAttribute("listaClientes", clienteRepository.findAll());
-        return "listar-clientes";
+        model.addAttribute("clientes", clienteRepository.findAll());
+        return "listar-cliente";
     }
 
     @GetMapping("/nuevo")
@@ -31,33 +27,62 @@ public class ClienteController {
         return "formulario-cliente";
     }
 
-    @PostMapping("/guardar")
-    public String guardar(@ModelAttribute("cliente") Cliente cliente,
-                          RedirectAttributes redirectAttrs) {
-        clienteRepository.save(cliente);
-        redirectAttrs.addFlashAttribute("successMsg", "Cliente guardado correctamente.");
-        return "redirect:/clientes/listar";
-    }
-
     @GetMapping("/editar/{id}")
     public String editar(@PathVariable("id") Long id, Model model) {
-        Cliente cliente = clienteRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("ID inválido: " + id));
-        model.addAttribute("cliente", cliente);
+
+        model.addAttribute(
+                "cliente",
+                clienteRepository.findById(id).orElseThrow()
+        );
+
         return "formulario-cliente";
     }
 
-    @GetMapping("/eliminar/{id}")
-    public String eliminar(@PathVariable("id") Long id, RedirectAttributes redirectAttrs) {
-        // Primero eliminar todas las ventas asociadas al cliente
-        List<Venta> ventas = ventaRepository.findAll().stream()
-                .filter(v -> v.getCliente().getId().equals(id))
-                .toList();
-        ventaRepository.deleteAll(ventas);
+    @PostMapping("/guardar")
+    public String guardar(@ModelAttribute Cliente cliente,
+                          RedirectAttributes redirectAttributes) {
 
-        // Ahora sí se puede eliminar el cliente
-        clienteRepository.deleteById(id);
-        redirectAttrs.addFlashAttribute("successMsg", "Cliente y sus ventas eliminados correctamente.");
+        try {
+
+            clienteRepository.save(cliente);
+
+            redirectAttributes.addFlashAttribute(
+                    "mensaje",
+                    "Cliente guardado correctamente"
+            );
+
+        } catch (Exception e) {
+
+            redirectAttributes.addFlashAttribute(
+                    "error",
+                    "El número de documento ya está registrado para otro cliente"
+            );
+        }
+
+        return "redirect:/clientes/listar";
+    }
+
+    @GetMapping("/eliminar/{id}")
+    public String eliminar(@PathVariable("id") Long id,
+                           RedirectAttributes redirectAttributes) {
+
+        try {
+
+            clienteRepository.deleteById(id);
+
+            redirectAttributes.addFlashAttribute(
+                    "mensaje",
+                    "Cliente eliminado correctamente"
+            );
+
+        } catch (Exception e) {
+
+            redirectAttributes.addFlashAttribute(
+                    "error",
+                    "No se puede eliminar este cliente porque tiene ventas asociadas"
+            );
+        }
+
         return "redirect:/clientes/listar";
     }
 }

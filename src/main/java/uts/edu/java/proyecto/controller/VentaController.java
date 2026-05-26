@@ -8,9 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import uts.edu.java.proyecto.model.Cliente;
@@ -19,7 +16,6 @@ import uts.edu.java.proyecto.model.Producto;
 import uts.edu.java.proyecto.model.Venta;
 
 import uts.edu.java.proyecto.repository.ClienteRepository;
-import uts.edu.java.proyecto.repository.DetalleVentaRepository;
 import uts.edu.java.proyecto.repository.ProductoRepository;
 import uts.edu.java.proyecto.repository.VentaRepository;
 
@@ -35,12 +31,6 @@ public class VentaController {
 
     @Autowired
     private ClienteRepository clienteRepository;
-
-    @Autowired
-    private DetalleVentaRepository detalleVentaRepository;
-    
-    @Autowired
-    private DetalleVentaRepository detalleRepository;
 
     @GetMapping("/listar")
     public String listar(Model model) {
@@ -168,13 +158,8 @@ public class VentaController {
         venta.setDetalles(detalles);
         venta.setTotal(total);
 
-        // GUARDAR VENTA
+        // GUARDAR VENTA Y DETALLES AUTOMÁTICAMENTE
         ventaRepository.save(venta);
-
-        // GUARDAR DETALLES
-        for (DetalleVenta detalle : detalles) {
-            detalleRepository.save(detalle);
-        }
 
         redirectAttrs.addFlashAttribute(
                 "successMsg",
@@ -190,17 +175,17 @@ public class VentaController {
         Venta venta = ventaRepository.findById(id).orElse(null);
 
         if (venta == null) {
+
             redirectAttrs.addFlashAttribute(
                 "errorMsg",
-                "La venta no existe."
-            );
+                "La venta no existe.");
 
             return "redirect:/ventas/listar";
         }
 
         try {
 
-            // Restaurar stock
+            // RESTAURAR STOCK
             for (DetalleVenta detalle : venta.getDetalles()) {
 
                 Producto producto = detalle.getProducto();
@@ -216,19 +201,13 @@ public class VentaController {
                 }
             }
 
-            // Limpiar detalles
-            venta.getDetalles().clear();
-
-            // Guardar cambios
-            ventaRepository.save(venta);
-
-            // Eliminar venta
+            // ELIMINAR VENTA
+            // orphanRemoval + cascade eliminan detalles automáticamente
             ventaRepository.delete(venta);
 
             redirectAttrs.addFlashAttribute(
                 "successMsg",
-                "Factura eliminada correctamente."
-            );
+                "Factura eliminada correctamente.");
 
         } catch (Exception e) {
 
@@ -236,8 +215,7 @@ public class VentaController {
 
             redirectAttrs.addFlashAttribute(
                 "errorMsg",
-                "Error al eliminar la factura."
-            );
+                "Error al eliminar la factura.");
         }
 
         return "redirect:/ventas/listar";

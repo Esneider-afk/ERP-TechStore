@@ -16,14 +16,13 @@ public class Venta {
     private LocalDateTime fecha;
 
     @ManyToOne
-    @JoinColumn(name = "cliente_id", nullable = false)
+    @JoinColumn(name = "cliente_id")
     private Cliente cliente;
 
     @OneToMany(
         mappedBy = "venta",
         cascade = CascadeType.ALL,
-        orphanRemoval = true,
-        fetch = FetchType.EAGER
+        orphanRemoval = true
     )
     private List<DetalleVenta> detalles = new ArrayList<>();
 
@@ -34,16 +33,8 @@ public class Venta {
         this.total = 0.0;
     }
 
-    // =========================
-    // GETTERS Y SETTERS
-    // =========================
-
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public LocalDateTime getFecha() {

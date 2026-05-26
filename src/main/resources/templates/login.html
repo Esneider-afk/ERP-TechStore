@@ -3,278 +3,143 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar Sesión - TechStore</title>
+    <title>TechStore</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
-        *, *::before, *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
 
-        body {
-            background: #0d1117;
+        body{
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             min-height: 100vh;
             display: flex;
-            align-items: center;
             justify-content: center;
-            font-family: 'Segoe UI', system-ui, sans-serif;
+            align-items: center;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        .bg-grid {
-            position: fixed;
-            inset: 0;
-            background-image:
-                linear-gradient(rgba(30,100,200,0.04) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(30,100,200,0.04) 1px, transparent 1px);
-            background-size: 40px 40px;
-            pointer-events: none;
-        }
-
-        .card {
-            background: #161b22;
-            border: 1px solid #21262d;
-            border-radius: 12px;
+        .login-container{
             width: 100%;
-            max-width: 400px;
-            padding: 2.5rem;
-            position: relative;
-            z-index: 1;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+            max-width: 420px;
+            background: white;
+            padding: 40px;
+            border-radius: 18px;
+            box-shadow: 0 10px 35px rgba(0,0,0,0.25);
         }
 
-        .logo-wrap {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.75rem;
-            margin-bottom: 0.5rem;
+        .title{
+            text-align: center;
+            font-size: 32px;
+            font-weight: bold;
+            color: #1e3c72;
+            margin-bottom: 5px;
         }
 
-        .logo-icon {
-            width: 42px;
-            height: 42px;
-            background: linear-gradient(135deg, #1d4ed8, #3b82f6);
+        .subtitle{
+            text-align: center;
+            color: gray;
+            margin-bottom: 30px;
+            letter-spacing: 1px;
+        }
+
+        .form-label{
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .form-control{
+            height: 50px;
             border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.1rem;
-            flex-shrink: 0;
         }
 
-        .logo-text {
-            font-size: 1.2rem;
-            font-weight: 800;
-            color: #f0f6fc;
-            letter-spacing: 0.5px;
+        .form-control:focus{
+            border-color: #1e3c72;
+            box-shadow: 0 0 0 0.2rem rgba(30,60,114,0.25);
         }
 
-        .subtitle {
-            text-align: center;
-            font-size: 0.78rem;
-            color: #6e7681;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 2rem;
-        }
-
-        .divider {
+        .btn-login{
+            background-color: #1e3c72;
             border: none;
-            border-top: 1px solid #21262d;
-            margin-bottom: 1.75rem;
+            height: 50px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 16px;
+            transition: 0.3s;
         }
 
-        .alert-err {
-            background: rgba(248,81,73,0.1);
-            border: 1px solid rgba(248,81,73,0.25);
-            color: #ff7b72;
-            border-radius: 8px;
-            padding: 0.65rem 0.9rem;
-            font-size: 0.84rem;
-            margin-bottom: 1.25rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+        .btn-login:hover{
+            background-color: #2a5298;
         }
 
-        .alert-ok {
-            background: rgba(63,185,80,0.1);
-            border: 1px solid rgba(63,185,80,0.25);
-            color: #3fb950;
-            border-radius: 8px;
-            padding: 0.65rem 0.9rem;
-            font-size: 0.84rem;
-            margin-bottom: 1.25rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
+        .alert{
+            border-radius: 10px;
         }
 
-        label {
-            display: block;
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: #8b949e;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-            margin-bottom: 0.4rem;
-        }
-
-        .input-wrap {
-            position: relative;
-            margin-bottom: 1rem;
-        }
-
-        .input-wrap i {
-            position: absolute;
-            left: 0.85rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #484f58;
-            font-size: 0.9rem;
-            pointer-events: none;
-        }
-
-        input[type=text],
-        input[type=password] {
-            width: 100%;
-            background: #0d1117;
-            border: 1px solid #30363d;
-            border-radius: 8px;
-            color: #f0f6fc;
-            font-size: 0.9rem;
-            padding: 0.65rem 0.9rem 0.65rem 2.4rem;
-            outline: none;
-            transition: border-color 0.2s, box-shadow 0.2s;
-            font-family: inherit;
-        }
-
-        input[type=text]:focus,
-        input[type=password]:focus {
-            border-color: #388bfd;
-            box-shadow: 0 0 0 3px rgba(56,139,253,0.15);
-        }
-
-        input::placeholder {
-            color: #484f58;
-        }
-
-        .mb-lg {
-            margin-bottom: 1.5rem;
-        }
-
-        .btn-submit {
-            width: 100%;
-            background: #1d4ed8;
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            padding: 0.7rem;
-            font-size: 0.92rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s;
-            font-family: inherit;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-            margin-top: 0.5rem;
-        }
-
-        .btn-submit:hover {
-            background: #2563eb;
-        }
-
-        .footer-text {
-            text-align: center;
-            font-size: 0.75rem;
-            color: #484f58;
-            margin-top: 1.5rem;
-        }
     </style>
 </head>
 
 <body>
 
-<div class="bg-grid"></div>
+<div class="login-container">
 
-<div class="card">
-
-    <div class="logo-wrap">
-        <div class="logo-icon">
-            <i class="bi bi-grid-3x3-gap-fill"></i>
-        </div>
-        <span class="logo-text">TechStore</span>
+    <div class="title">
+        TechStore
     </div>
 
     <div class="subtitle">
-        Módulo de Acceso
+        MÓDULO DE SEGURIDAD
     </div>
 
-    <hr class="divider">
-
-    <div th:if="${param.error}" class="alert-err">
-        <i class="bi bi-x-circle-fill"></i>
-        Usuario o contraseña incorrectos.
+    <!-- Mensaje de error -->
+    <div th:if="${param.error}" class="alert alert-danger text-center">
+        Usuario o contraseña incorrectos
     </div>
 
-    <div th:if="${param.logout}" class="alert-ok">
-        <i class="bi bi-check-circle-fill"></i>
-        Sesión cerrada correctamente.
+    <!-- Mensaje logout -->
+    <div th:if="${param.logout}" class="alert alert-success text-center">
+        Sesión cerrada correctamente
     </div>
 
-    <!-- FORMULARIO CORREGIDO -->
+    <!-- FORMULARIO -->
     <form th:action="@{/procesar-login}" method="POST">
 
-        <div>
-            <label for="username">Usuario</label>
+        <div class="mb-3">
+            <label class="form-label">
+                Usuario
+            </label>
 
-            <div class="input-wrap">
-                <i class="bi bi-person"></i>
-
-                <input
-                        type="text"
-                        id="username"
-                        name="username"
-                        placeholder="Ingrese su usuario"
-                        required
-                        autofocus>
-            </div>
+            <input type="text"
+                   name="username"
+                   class="form-control"
+                   placeholder="Ingrese su usuario"
+                   required>
         </div>
 
-        <div class="mb-lg">
+        <div class="mb-4">
+            <label class="form-label">
+                Contraseña
+            </label>
 
-            <label for="password">Contraseña</label>
-
-            <div class="input-wrap">
-                <i class="bi bi-lock"></i>
-
-                <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        placeholder="••••••••"
-                        required>
-            </div>
+            <input type="password"
+                   name="password"
+                   class="form-control"
+                   placeholder="Ingrese su contraseña"
+                   required>
         </div>
 
-        <button type="submit" class="btn-submit">
-            <i class="bi bi-box-arrow-in-right"></i>
+        <button type="submit"
+                class="btn btn-primary btn-login w-100">
+
             Ingresar al Sistema
+
         </button>
 
     </form>
 
-    <div class="footer-text">
-        TechStore &copy; 2026 — Acceso restringido
-    </div>
-
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>
